@@ -15,10 +15,17 @@ To run the script you need:
 - a list of sorted and indexed .bam files
 
 Before running the script edit the variables within the script for:
+
 threads= # number of threads
+
 reference= # reference genome
+
 chunks=2000 # number of regions to divide the genome into
+
 regions=target_regions # name of the region file
+
 bamlist=multibam.lst # list of bamfiles you want to call variants on, one per row. 
+
 temp_out_dir=a_directory_to_put_temp_files_in # name and then make a temp directory for output files
+
 final_name=name_of_final_file.vcf # name of final vcf file.
