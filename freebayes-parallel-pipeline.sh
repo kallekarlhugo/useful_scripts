@@ -17,7 +17,7 @@
 threads=40
 reference=alba_edited_genome_V2.fasta
 chunks=2000
-regions=target_regions.sh
+regions=target_regions
 bamlist=multibam.lst # list of bamfiles you want to call variants on, one per row.
 temp_out_dir=a_directory_to_put_temp_files_in
 final_name=name_of_final_file.vcf
