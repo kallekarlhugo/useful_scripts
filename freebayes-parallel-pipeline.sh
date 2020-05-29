@@ -14,23 +14,26 @@
 
 
 #1 define variables
-threads=40
-reference=alba_edited_genome_V2.fasta
-chunks=2000
-regions=target_regions
+
+
+threads=40 # number of threads
+reference=  # reference genome
+chunks=2000  # number of regions to divide the genome into
 bamlist=multibam.lst # list of bamfiles you want to call variants on, one per row.
-temp_out_dir=a_directory_to_put_temp_files_in
-final_name=name_of_final_file.vcf
+temp_out_dir=a_directory_to_put_temp_files_in # name and then make a temp directory for output files
+final_name=name_of_final_file.vcf # name of final vcf file.
+
+
 
 #2 add stuff to the path
 PATH=/mnt/griffin/kaltun/software/:/mnt/griffin/kaltun/software/freebayes/vcflib/bin/:/mnt/griffin/kaltun/software/freebayes/scripts/:/data/programs/pigz/:$PATH
 
 #3 generate regions of equal size
 bamindexes=$(tr '\n' ' ' < $bamlist)
-/mnt/griffin/kaltun/software/goleft_linux64 indexsplit --n $chunks --fai $ref.fai $bamindexes | awk '{print $1":"$2"-"$3}' > $regions
+/mnt/griffin/kaltun/software/goleft_linux64 indexsplit --n $chunks --fai $ref.fai $bamindexes | awk '{print $1":"$2"-"$3}' > $final_name.regions
 
 #4 run the edited script
-/mnt/griffin/kaltun/software/freebayes/scripts/freebayes-parallel_no_sort $regions $threads -f $ref -L $bamlist -v $temp_out_dir/{}.vcf
+/mnt/griffin/kaltun/software/freebayes/scripts/freebayes-parallel_no_sort $final_name.regions $threads -f $ref -L $bamlist -v $temp_out_dir/{}.vcf
 
 #5 concatenate all the individual vcf files i and fipe the output into the cleaning script, which will remove headers and remove overlapping regions.
-while read -r name; do cat "$temp_out_dir/$name.vcf"; done < $regions | vcffirstheader | vcfstreamsort | vcfuniq > $final_name
+while read -r name; do cat "$temp_out_dir/$name.vcf"; done < $final_name.regions | vcffirstheader | vcfstreamsort | vcfuniq > $final_name
