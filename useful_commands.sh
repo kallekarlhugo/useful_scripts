@@ -120,7 +120,7 @@ cut -s -f 1,9 yourannots.gff3 | grep $'\t' | cut -f 1 | sort | uniq
 sed -i 's/\  */\t/g' meta.tsv
 
 # edit output from plink to be a proper tsv
-plink_output=
+plink_output=merged_all_Ceur_albaEditV2.filtered_v4.recode.plink.assoc.adjusted
 sed 's/\  */\t/g'  $plink_output | sed 's/\t$//g' | sed 's/:/\t/g' | sed 's/CHR/\tCHR/g' |  cut -f3- > $plink_output.tsv
 
 # merge selected columns from files that matches pattern, and add filename for each row.
