@@ -2,30 +2,7 @@
 ssh -N -L 8787:miles.zoologi.su.se:8787 kaltun@miles.zoologi.su.se
 http://localhost:8787/ # open link in browser
 
-# Use IGV from server ( Duke or miles)
-# start x410 or VcXsrv first
-ssh -X -Y kaltun@miles.zoologi.su.se
-java -Xmx16g -jar /data/programs/IGV_2.3.40/igv.jar
-
-## Chromosome2
-scp kaltun@duke.zoologi.su.se:/cerberus/projects/kaltun/nsp/Chromosome_2_luleasorted.filt.bam.sorted.bam* .
-scp kaltun@duke.zoologi.su.se:/cerberus/projects/kaltun/nsp/rc3_pienap.gff .
-scp kaltun@duke.zoologi.su.se:/cerberus/projects/kaltun/nsp/Chromosome_2.fa .
-
-# Where does the first one come from?
-Chromosome_2:2,162,802-2,385,635
-Chromosome_2:750,000-800,000
-
-# Added the real second loci.
-Chromosome_2:550,000-580,000
-
-## Chromosome12
-scp kaltun@duke.zoologi.su.se:/cerberus/projects/kaltun/nsp/Chromosome_12_luleasorted.filt.bam.sorted.bam* .
-scp kaltun@duke.zoologi.su.se:/cerberus/projects/kaltun/nsp/Chromosome_12.fa .
-scp kaltun@duke.zoologi.su.se:/cerberus/projects/kaltun/nsp/rc3_pienap.gff .
-Chromosome_12:3,750,000-3,800,000
-
-
+#
 # edit .gff (Cds -> cds, exclude exons)
 sed 's/CDS/cds/g' rc3_pienap.gff > rc3_pienap.cds.gff
 awk '$3!="exon"' rc3_pienap.cds.gff > rc3_pienap.cds.noexons.gff
@@ -141,6 +118,10 @@ cut -s -f 1,9 yourannots.gff3 | grep $'\t' | cut -f 1 | sort | uniq
 
 # replace multuple spaces with tab
 sed -i 's/\  */\t/g' meta.tsv
+
+# edit output from plink to be a proper tsv
+plink_output=
+sed 's/\  */\t/g'  $plink_output | sed 's/\t$//g' | sed 's/:/\t/g' | sed 's/CHR/\tCHR/g' |  cut -f3- > $plink_output.tsv
 
 # merge selected columns from files that matches pattern, and add filename for each row.
 find . -name "Bmori90_v_C*blasttab" -exec awk 'NR>1 {print FILENAME,$1,$4,$5,$6}' {} \; | sed 's/.\//''/' > Bmori_v_Ceur_superbundle.txt
