@@ -16,5 +16,5 @@ samtools_path=/data/programs/samtools-1.7/
 reference=
 outfile_root=
 
-# testrun
+# run
 cat Chromo_list | parallel -j 30 "$samtools_path/samtools mpileup  -Q15 -C 50 -t DP -uf $reference-r {} $bams > $outfile_root.{}.mpileup"
